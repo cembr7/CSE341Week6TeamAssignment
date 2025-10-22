@@ -85,7 +85,7 @@ const validateCreateContact = (req, res, next) => {
   } else if (email.trim().length === 0) {
     errors.push('email cannot be empty or only whitespace');
   } else {
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!emailRegex.test(email.trim())) {
       errors.push('email must be a valid email address (example, user@example.com)');
     }
@@ -210,7 +210,7 @@ const validateUpdateContact = (req, res, next) => {
   } else if (email.trim().length === 0) {
     errors.push('email cannot be empty or only whitespace');
   } else {
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!emailRegex.test(email.trim())) {
       errors.push('email must be a valid email address (e.g., user@example.com)');
     }
