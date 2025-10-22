@@ -16,16 +16,10 @@ const validateAllContacts = (req, res, next) => {
     }    next();
 }
 
-const validateSingleContact = (req, res, next) => {
-    const {id} = req.params.id;
+/*const validateSingleContact = (req, res, next) => {
+    const {id} = req.params;
 
-    // Validate that ID parameter exists   
-    if (!id) {
-    return res.status(400).json({           
-        message: 'Contact ID is required'        
-    });    
-           
-}
+
  
     // Validate MongoDB ObjectId format   
     if (!mongoose.Types.ObjectId.isValid(id)) {     
@@ -37,7 +31,53 @@ const validateSingleContact = (req, res, next) => {
 
     next();
         
-}
+}*/
+const validateSingleContact = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const contact = await Contact.findById(id);
+
+    if (!contact) {
+      return res.status(404).json({
+        success: false,
+        message: `Contact with ID '${id}' not found`,
+        contactId: id
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: contact
+    });
+  } catch (error) {
+    console.error('Error in GET /contacts/:id:', error);
+
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid contact ID format',
+        contactId: req.params.id,
+        error: error.message
+      });
+    }
+
+    if (error.name === 'MongoNetworkError') {
+      return res.status(503).json({
+        success: false,
+        message: 'Database connection error. Please try again later.',
+        error: error.message
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while retrieving the contact',
+      contactId: req.params.id,
+      error: error.message
+    });
+  }
+};
 
 const validateCreateContact = (req, res, next) => {
   const { firstName, lastName, email, favoriteColor, birthday } = req.body;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {validateAllContacts,validateSingleContact} = require('../middleware/routeValidation');
+const {validateAllContacts,validateSingleContact, validateCreateContact, validateUpdateContact} = require('../middleware/routeValidation');
 
 const contactsController = require('../controllers/contacts');
 
@@ -34,7 +34,7 @@ router.get('/:id', validateSingleContact, contactsController.getSingle);
  * @returns 400 - Bad request
  * @returns 500 - Server error
  */
-router.post('/', contactsController.createContact);
+router.post('/', validateCreateContact, contactsController.createContact);
 
 /**
  * @route PUT /contacts/:id
@@ -47,7 +47,7 @@ router.post('/', contactsController.createContact);
  * @returns 404 - Contact not found
  * @returns 500 - Server error
  */
-router.put('/:id', contactsController.updateContact);
+router.put('/:id', validateUpdateContact, contactsController.updateContact);
 
 
 /**
