@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {validateAllContacts,validateSingleContact, validateCreateContact, validateUpdateContact} = require('../middleware/routeValidation');
+const {validateAllContacts,validateSingleContact, validateCreateContact, validateUpdateContact, validateDeleteContact} = require('../middleware/routeValidation');
 
 const contactsController = require('../controllers/contacts');
 
@@ -59,6 +59,6 @@ router.put('/:id', validateUpdateContact, contactsController.updateContact);
  * @returns 404 - Contact not found
  * @returns 500 - Server error
  */
-router.delete('/:id', contactsController.deleteContact);
+router.delete('/:id', validateDeleteContact, contactsController.deleteContact);
 
 module.exports = router;
